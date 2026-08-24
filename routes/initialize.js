@@ -7,11 +7,6 @@ router.post("/", async (req, res) => {
 
     try {
         await connection.beginTransaction();
-
-        // =========================================
-        // 1. Create / Get FreshFoods Supplier
-        // =========================================
-
         let [suppliers] = await connection.execute(
             "SELECT SupplierID FROM suppliers WHERE SupplierName = ?",
             ["FreshFoods"]
@@ -26,14 +21,8 @@ router.post("/", async (req, res) => {
                 "INSERT INTO suppliers (SupplierName, ContactNumber) VALUES (?, ?)",
                 ["FreshFoods", "01001234567"]
             );
-
             supplierId = result.insertId;
         }
-
-        // =========================================
-        // 2. Create / Get Products
-        // =========================================
-
         const products = [
             {
                 name: "Milk",
@@ -51,9 +40,7 @@ router.post("/", async (req, res) => {
                 stock: 40
             }
         ];
-
         const productIds = {};
-
         for (const product of products) {
 
             let [existingProduct] = await connection.execute(
@@ -82,13 +69,7 @@ router.post("/", async (req, res) => {
                 productIds[product.name] = result.insertId;
             }
         }
-
-        // =========================================
-        // 3. Record Sale of 2 Milk
-        // =========================================
-
         const milkId = productIds["Milk"];
-
         const [existingSale] = await connection.execute(
             `SELECT SaleID
              FROM sales
@@ -97,6 +78,7 @@ router.post("/", async (req, res) => {
              AND SaleDate = ?`,
             [milkId, 2, "2025-05-20"]
         );
+
 
         if (existingSale.length === 0) {
 
@@ -113,7 +95,6 @@ router.post("/", async (req, res) => {
         }
 
         await connection.commit();
-
         res.status(201).json({
             supplier: {
                 name: "FreshFoods",
@@ -161,5 +142,4 @@ router.post("/", async (req, res) => {
         connection.release();
     }
 });
-
 module.exports = router;

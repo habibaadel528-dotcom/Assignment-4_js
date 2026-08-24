@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db/connection");
 
-// 9. Total quantity sold for each product
 router.get("/total-sold", async (req, res) => {
     try {
         const [rows] = await pool.execute(`
@@ -16,9 +15,7 @@ router.get("/total-sold", async (req, res) => {
             GROUP BY p.ProductID, p.ProductName
             ORDER BY p.ProductID
         `);
-
         res.status(200).json(rows);
-
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -26,9 +23,6 @@ router.get("/total-sold", async (req, res) => {
         });
     }
 });
-
-
-// 10. Product with the highest stock quantity
 router.get("/highest-stock", async (req, res) => {
     try {
         const [rows] = await pool.execute(`
@@ -42,9 +36,7 @@ router.get("/highest-stock", async (req, res) => {
                 FROM products
             )
         `);
-
         res.status(200).json(rows);
-
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -52,9 +44,6 @@ router.get("/highest-stock", async (req, res) => {
         });
     }
 });
-
-
-// 11. Suppliers whose names start with 'F'
 router.get("/suppliers-starting-f", async (req, res) => {
     try {
         const [rows] = await pool.execute(`
@@ -65,9 +54,7 @@ router.get("/suppliers-starting-f", async (req, res) => {
             FROM suppliers
             WHERE SupplierName LIKE 'F%'
         `);
-
         res.status(200).json(rows);
-
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -75,9 +62,6 @@ router.get("/suppliers-starting-f", async (req, res) => {
         });
     }
 });
-
-
-// 12. Products that have never been sold
 router.get("/never-sold", async (req, res) => {
     try {
         const [rows] = await pool.execute(`
@@ -92,9 +76,7 @@ router.get("/never-sold", async (req, res) => {
                 ON p.ProductID = s.ProductID
             WHERE s.ProductID IS NULL
         `);
-
         res.status(200).json(rows);
-
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -102,7 +84,6 @@ router.get("/never-sold", async (req, res) => {
         });
     }
 });
-// 13. Retrieve all sales with product name, quantity sold and sale date
 router.get("/sales-report", async (req, res) => {
     try {
         const [rows] = await pool.execute(`
@@ -115,9 +96,7 @@ router.get("/sales-report", async (req, res) => {
                 ON s.ProductID = p.ProductID
             ORDER BY s.SaleID
         `);
-
         res.status(200).json(rows);
-
     } catch (error) {
         console.error(error);
         res.status(500).json({

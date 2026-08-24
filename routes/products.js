@@ -43,12 +43,6 @@ router.get("/", async (req, res) => {
         });
     }
 });
-
-// NOTE: these two specific routes must stay ABOVE "/:id"
-// otherwise Express would treat "update-bread-price" / "delete-eggs"
-// as an :id value and match the generic routes instead.
-
-// 7. Update the price of 'Bread' to 25.00
 router.put("/update-bread-price", async (req, res) => {
     try {
         const [result] = await pool.query(
@@ -72,8 +66,6 @@ router.put("/update-bread-price", async (req, res) => {
         });
     }
 });
-
-// 8. Delete the product 'Eggs'
 router.delete("/delete-eggs", async (req, res) => {
     try {
         const [result] = await pool.query(
